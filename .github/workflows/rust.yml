@@ -14,6 +14,11 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./node_agent
+    
     steps:
     - uses: actions/checkout@v4
     - name: Build
