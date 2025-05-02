@@ -23,6 +23,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build
       run: cargo build --verbose
+    - name: dir
+      run: ls -lh
     - name: Start MQTT
       run: docker compose up -d
     - name: Run tests
