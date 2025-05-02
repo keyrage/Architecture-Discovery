@@ -1,0 +1,10 @@
+---
+version: '2'
+services:
+  dispatch-mqtt:
+    image: eclipse-mosquitto:2.0.15
+    hostname: mqtt
+    ports: 
+    - "9001:9001"
+    volumes:
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
