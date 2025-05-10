@@ -3,7 +3,7 @@
   "config" : {
     "connector.class" : "io.lenses.streamreactor.connect.mqtt.source.MqttSourceConnector",
     "tasks.max" : "5",
-    "connect.mqtt.hosts" : "tcp://arch-integ-mqtt:9001",
+    "connect.mqtt.hosts" : "tcp://arch-integ-dispatch-mqtt:9001",
     "connect.mqtt.kcql" : "INSERT INTO mqtt.nodes SELECT * FROM nodes WITHCONVERTER=`io.lenses.streamreactor.connect.converters.source.JsonSimpleConverter` WITHKEY(node_id)",
     "connect.mqtt.service.quality" : 1,
     "connect.mqtt.client.id" : "bridge",

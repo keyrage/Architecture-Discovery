@@ -1,0 +1,1 @@
+pub -h $TEST_MQTT_HOST -p $TEST_MQTT_PORT -t /agents -m '{"correlation_id":67e55044-10b1-426f-9247-bb680e5fe0c8,"agent_id":"aaaaaaaaaaaa"}' -q 0

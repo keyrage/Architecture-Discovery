@@ -45,3 +45,20 @@ services:
     env_file: .env.bridge
     ports: 
     - "8083:8083"
+  arch-integ-nodeagentsim:
+    image: nodeagentsim:latest
+    build: ../integration-tests/
+    depends_on:
+      - arch-integ-dispatch-mqtt
+      - arch-integ-agent-bridge
+    environment:
+      - TEST_MQTT_HOST=arch-integ-dispatch-mqtt
+    command: sh /tests/agent.sh
+
+  arch-integ-bridgeconfig:
+    image: bridgeconfig:latest
+    build: ./config/
+    depends_on:
+      - arch-integ-agent-bridge
+    environment:
+      - TEST_BRIDGE_HOST=arch-integ-agent-bridge
