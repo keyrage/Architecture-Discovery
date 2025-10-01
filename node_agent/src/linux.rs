@@ -19,7 +19,7 @@ pub mod sys_interagator {
     #[derive(Serialize, Deserialize)]
     pub struct SystemInfo {
         pub agent_id: String,
-        pub correlation_id: Uuid,
+        //pub correlation_id: Uuid,
         pub hostname: String,
         pub ipv4_addresses: Vec<String>,
         pub ipv6_addresses: Vec<String>,
@@ -34,7 +34,7 @@ pub mod sys_interagator {
             let ipv6_addresses = Self::get_ipaddresses("v6");
 
             Self {agent_id : String::from(machine_id_contents),
-                correlation_id : Uuid::new_v4(),
+                //correlation_id : Uuid::new_v4(),
                 hostname : String::from(hostname_contents),
                 ipv4_addresses : ipv4_addresses,
                 ipv6_addresses : ipv6_addresses,

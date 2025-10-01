@@ -1,7 +1,7 @@
 //use std::sync::mpsc;
 //use std::thread;
 use linux::sys_interagator;
-use node_agent::inventory_client::InventoryTransport;
+use node_agent::inventory_client::{AgentInfo, InventoryTransport};
 use serde_json::json;
 use log::*;
 use structopt::StructOpt;
@@ -21,6 +21,9 @@ struct Opt {
     /// Timestamp (sec, ms, ns, none)
     #[structopt(short = "t", long = "timestamp")]
     ts: Option<stderrlog::Timestamp>,
+    /// Site code (-s sitecode)
+    #[structopt(short = "s", long = "sitecode", default_value="default")]
+    sitecode: String
 }
 
 fn main() {
@@ -38,6 +41,9 @@ fn main() {
     //Set up a new onject to get specifc system information needed
     let system = sys_interagator::SystemInfo::new();
 
+    //Sets up an agent object
+    let agent: AgentInfo = AgentInfo::new(system.agent_id.clone(), opt.sitecode);
+
     //Setup a connection to MQTT
     let mut server = InventoryTransport::new("localhost".to_string(),9001,system.agent_id.clone());
     info!("Connecting to {}",server.url);
@@ -48,13 +54,11 @@ fn main() {
             return
         }
     };
-    //Send agent information to inform subscribers that there is a new agent
-    let system_json = json!({
-        "correlation_id":system.correlation_id,
-        "agent_id":system.agent_id
-    });
 
-    let system_json_string = serde_json::to_string(&system_json).unwrap();
+    //Send agent information to inform subscribers that there is a new agent
+    let agent_json = serde_json::to_string(&agent).unwrap();
+
+    let system_json_string = serde_json::to_string(&agent_json).unwrap();
     debug!("System message payload: {}",system_json_string);
 
     server.send_message(&"/agents".to_string(),&system_json_string).unwrap();
@@ -91,7 +95,7 @@ fn main() {
         for l in listeners {
             //println!("{}");
             let net_listening_json = json!({
-                "correlation_id":system.correlation_id,
+                "correlation_id":agent.correlation_id,
                 "node":system.agent_id,
                 "pid":l.process.pid,
                 "tcp_socket":l.socket,
@@ -105,7 +109,7 @@ fn main() {
     for connection in system_network.connections {
         //let connection_json = serde_json::to_string(&connection);
         let net_connection_json = json!({
-            "correlation_id":system.correlation_id,
+            "correlation_id":agent.correlation_id,
             "node":system.agent_id,
             "source_socket": connection.0,
             "destination_socket": connection.1,

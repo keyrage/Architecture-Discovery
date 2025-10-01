@@ -4,6 +4,8 @@ pub mod inventory_client {
     use log::*;
     use std::error::Error;
     use std::collections::VecDeque;
+    use uuid::Uuid;
+    use serde::{Deserialize, Serialize};
     extern crate paho_mqtt as mqtt;
     
     pub struct InventoryTransport {
@@ -133,7 +135,26 @@ pub mod inventory_client {
             Ok(1)
         }
     }
+    
+    #[derive(Serialize, Deserialize)]
+    pub struct AgentInfo {
+        pub agent_id: String,
+        pub site_code: String,
+        pub correlation_id: Uuid
+    }
+
+    impl AgentInfo {
+        pub fn new(agent_id: String, site_code: String) -> Self{
+            Self {
+                agent_id: agent_id,
+                site_code: site_code,
+                correlation_id: Uuid::new_v4()
+            }
+        }
+    }
 }
+
+
 
 
 
